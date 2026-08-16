@@ -1,6 +1,7 @@
 import { UserRepository } from "../repositories/user.repository.js";
 import { RegisterInput } from "../schemas/auth.schema.js";
 import { hashPassword } from "../utils/password.js";
+import { AppError } from "../errors/app-error.js";
 
 export class AuthService {
   constructor(
@@ -12,7 +13,11 @@ export class AuthService {
       await this.userRepository.findByEmail(input.email);
 
     if (existingUser) {
-      throw new Error("USER_ALREADY_EXISTS");
+    throw new AppError(
+        "USER_ALREADY_EXISTS",
+        409,
+        "A user with this email already exists.",
+    );
     }
 
     const passwordHash = await hashPassword(input.password);
