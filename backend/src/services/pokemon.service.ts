@@ -1,6 +1,6 @@
 import { PokemonRepository } from "../repositories/pokemon.repository.js";
 import { CacheService } from "./cache.service.js";
-import { buildPokemonListCacheKey } from "../utils/pokemon-cache-key.js";
+import { buildPokemonListCacheKey, buildPokemonCacheKey } from "../utils/pokemon-cache-key.js";
 import { logger } from "../utils/logger.js";
 import { AppError } from "../errors/app-error.js";
 
@@ -106,7 +106,7 @@ export class PokemonService {
   }
 
   async findById(id: number): Promise<PokemonResponse> {
-    const cacheKey = `pokemon:${id}`;
+    const cacheKey = buildPokemonCacheKey(id);
 
     const cached =
       await this.cacheService.get<PokemonResponse>(cacheKey);

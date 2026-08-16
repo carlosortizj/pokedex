@@ -15,3 +15,7 @@ export function buildPokemonListCacheKey(
     `order=${query.order}`,
   ].join(":");
 }
+
+export const buildPokemonCacheKey = (
+  id: number,
+) => `pokemon:${id}`;

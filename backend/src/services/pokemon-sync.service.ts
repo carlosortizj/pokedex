@@ -1,7 +1,7 @@
 import { PokeApiService } from "./pokeapi.service.js";
 import { PokemonRepository } from "../repositories/pokemon.repository.js";
 import { CacheService } from "./cache.service.js";
-import { POKEMON_LIST_CACHE_PATTERN } from "../utils/pokemon-cache-key.js";
+import { buildPokemonCacheKey, POKEMON_LIST_CACHE_PATTERN } from "../utils/pokemon-cache-key.js";
 
 export class PokemonSyncService {
   constructor(
@@ -49,6 +49,14 @@ export class PokemonSyncService {
 
     await this.cacheService.deleteByPattern(
         POKEMON_LIST_CACHE_PATTERN,
+    );
+
+    await this.cacheService.deleteByPattern(
+      POKEMON_LIST_CACHE_PATTERN,
+    );
+
+    await this.cacheService.delete(
+      buildPokemonCacheKey(savedPokemon.externalId),
     );
 
     return savedPokemon;
