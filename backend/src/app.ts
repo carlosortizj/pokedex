@@ -6,6 +6,7 @@ import pinoHttp from "pino-http";
 import { logger } from "./utils/logger.js";
 import { errorMiddleware } from "./middlewares/error.middleware.js";
 import { notFoundMiddleware } from "./middlewares/not-found.middleware.js";
+import authRoutes from "./routes/auth.routes.js";
 
 const app = express();
 
@@ -42,6 +43,7 @@ app.get("/api/health/db", async (_req, res) => {
 });
 
 app.use("/api/pokemon", pokemonRoutes);
+app.use("/api/auth", authRoutes);
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);
 
