@@ -2,6 +2,21 @@ import { PokemonRepository } from "../repositories/pokemon.repository.js";
 import { CacheService } from "./cache.service.js";
 import { buildPokemonListCacheKey } from "../utils/pokemon-cache-key.js";
 import { logger } from "../utils/logger.js";
+import { AppError } from "../errors/app-error.js";
+
+interface PokemonResponse {
+  id: number;
+  name: string;
+  height: number | null;
+  weight: number | null;
+  baseExperience: number | null;
+  imageUrl: string | null;
+  types: string[];
+  abilities: Array<{
+    name: string;
+    isHidden: boolean;
+  }>;
+}
 
 interface FindPokemonParams {
   page: number;
@@ -13,19 +28,7 @@ interface FindPokemonParams {
 }
 
 interface PokemonListResponse {
-  data: Array<{
-    id: number;
-    name: string;
-    height: number | null;
-    weight: number | null;
-    baseExperience: number | null;
-    imageUrl: string | null;
-    types: string[];
-    abilities: Array<{
-      name: string;
-      isHidden: boolean;
-    }>;
-  }>;
+  data: PokemonResponse[];
   pagination: {
     page: number;
     limit: number;
@@ -91,6 +94,68 @@ export class PokemonService {
         total,
         totalPages,
       },
+    };
+
+    await this.cacheService.set(
+      cacheKey,
+      result,
+      60 * 5,
+    );
+
+    return result;
+  }
+
+  async findById(id: number): Promise<PokemonResponse> {
+    const cacheKey = `pokemon:${id}`;
+
+    const cached =
+      await this.cacheService.get<PokemonResponse>(cacheKey);
+
+    if (cached) {
+      logger.info(
+        {
+          cacheKey,
+          pokemonId: id,
+        },
+        "Pokemon cache hit",
+      );
+
+      return cached;
+    }
+
+    logger.info(
+      {
+        cacheKey,
+        pokemonId: id,
+      },
+      "Pokemon cache miss",
+    );
+
+    const pokemon =
+      await this.pokemonRepository.findByExternalId(id);
+
+    if (!pokemon) {
+      throw new AppError(
+        "POKEMON_NOT_FOUND",
+        404,
+        "Pokemon not found.",
+      );
+    }
+
+    const result: PokemonResponse = {
+      id: pokemon.externalId,
+      name: pokemon.name,
+      height: pokemon.height,
+      weight: pokemon.weight,
+      baseExperience: pokemon.baseExperience,
+      imageUrl: pokemon.imageUrl,
+      types: pokemon.types.map(
+        (item) => item.type.name,
+      ),
+      abilities: pokemon.abilities.map((item) => ({
+        name: item.ability.name,
+        isHidden: item.isHidden,
+      })),
     };
 
     await this.cacheService.set(

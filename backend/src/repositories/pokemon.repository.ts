@@ -143,4 +143,24 @@ export class PokemonRepository {
       total,
     };
   }
+
+  async findByExternalId(externalId: number) {
+    return prisma.pokemon.findUnique({
+      where: {
+        externalId,
+      },
+      include: {
+        types: {
+          include: {
+            type: true,
+          },
+        },
+        abilities: {
+          include: {
+            ability: true,
+          },
+        },
+      },
+    });
+  }
 }
