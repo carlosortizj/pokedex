@@ -1,10 +1,13 @@
 import { PokeApiService } from "./pokeapi.service.js";
 import { PokemonRepository } from "../repositories/pokemon.repository.js";
+import { CacheService } from "./cache.service.js";
+import { POKEMON_LIST_CACHE_PATTERN } from "../utils/pokemon-cache-key.js";
 
 export class PokemonSyncService {
   constructor(
     private readonly pokeApiService = new PokeApiService(),
     private readonly pokemonRepository = new PokemonRepository(),
+    private readonly cacheService = new CacheService(),
   ) {}
 
   async syncPokemon(id: number) {
@@ -43,6 +46,10 @@ export class PokemonSyncService {
         abilityData.is_hidden,
       );
     }
+
+    await this.cacheService.deleteByPattern(
+        POKEMON_LIST_CACHE_PATTERN,
+    );
 
     return savedPokemon;
   }
