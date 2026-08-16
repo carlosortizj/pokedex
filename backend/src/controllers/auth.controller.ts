@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { AuthService } from "../services/auth.service.js";
 import { registerSchema, loginSchema } from "../schemas/auth.schema.js";
 import type { AuthenticatedRequest } from "../middlewares/auth.middleware.js";
+import { AppError } from "../errors/app-error.js";
 
 export class AuthController {
   constructor(
@@ -60,6 +61,36 @@ export class AuthController {
             email: authenticatedRequest.user.email,
           },
         },
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  refresh = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { refreshToken } = req.body;
+
+      if (
+        typeof refreshToken !== "string" ||
+        !refreshToken
+      ) {
+        throw new AppError(
+          "INVALID_REFRESH_TOKEN",
+          401,
+          "Refresh token is required.",
+        );
+      }
+
+      const result =
+        await this.authService.refresh(refreshToken);
+
+      res.status(200).json({
+        data: result,
       });
     } catch (error) {
       next(error);

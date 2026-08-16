@@ -8,6 +8,7 @@ export interface AccessTokenPayload {
 
 export interface RefreshTokenPayload {
   userId: number;
+  sessionId: string;
 }
 
 export function generateAccessToken(
@@ -28,7 +29,8 @@ export function generateRefreshToken(
   payload: RefreshTokenPayload,
 ): string {
   const options: SignOptions = {
-    expiresIn: env.JWT_REFRESH_EXPIRES_IN as SignOptions["expiresIn"],
+    expiresIn:
+      env.JWT_REFRESH_EXPIRES_IN as SignOptions["expiresIn"],
   };
 
   return jwt.sign(
@@ -36,4 +38,13 @@ export function generateRefreshToken(
     env.JWT_REFRESH_SECRET,
     options,
   );
+}
+
+export function verifyRefreshToken(
+  token: string,
+): RefreshTokenPayload {
+  return jwt.verify(
+    token,
+    env.JWT_REFRESH_SECRET,
+  ) as RefreshTokenPayload;
 }
