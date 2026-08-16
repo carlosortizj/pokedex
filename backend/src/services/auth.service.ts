@@ -144,5 +144,19 @@ export class AuthService {
       accessToken,
     };
   }
+
+  async logout(refreshToken: string) {
+  let payload: RefreshTokenPayload;
+
+  try {
+    payload = verifyRefreshToken(refreshToken);
+  } catch {
+    return;
+  }
+
+  await this.sessionService.deleteSession(
+    payload.sessionId,
+  );
+}
 }
 

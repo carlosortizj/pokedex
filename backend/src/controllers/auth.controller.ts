@@ -96,4 +96,31 @@ export class AuthController {
       next(error);
     }
   };
+
+  logout = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { refreshToken } = req.body;
+
+      if (
+        typeof refreshToken !== "string" ||
+        !refreshToken
+      ) {
+        throw new AppError(
+          "INVALID_REFRESH_TOKEN",
+          401,
+          "Refresh token is required.",
+        );
+      }
+
+      await this.authService.logout(refreshToken);
+
+      res.status(204).send();
+    } catch (error) {
+      next(error);
+    }
+  };
 }
