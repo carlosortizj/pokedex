@@ -1,11 +1,6 @@
-import {
-  Request,
-  Response,
-  NextFunction,
-} from "express";
-
+import { Request, Response, NextFunction } from "express";
 import { AuthService } from "../services/auth.service.js";
-import { registerSchema } from "../schemas/auth.schema.js";
+import { registerSchema, loginSchema } from "../schemas/auth.schema.js";
 
 export class AuthController {
   constructor(
@@ -24,6 +19,24 @@ export class AuthController {
 
       res.status(201).json({
         data: user,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  login = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const input = loginSchema.parse(req.body);
+
+      const result = await this.authService.login(input);
+
+      res.status(200).json({
+        data: result,
       });
     } catch (error) {
       next(error);
