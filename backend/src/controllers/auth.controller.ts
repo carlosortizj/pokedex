@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { AuthService } from "../services/auth.service.js";
 import { registerSchema, loginSchema } from "../schemas/auth.schema.js";
+import type { AuthenticatedRequest } from "../middlewares/auth.middleware.js";
 
 export class AuthController {
   constructor(
@@ -37,6 +38,28 @@ export class AuthController {
 
       res.status(200).json({
         data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  me = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const authenticatedRequest =
+        req as AuthenticatedRequest;
+
+      res.status(200).json({
+        data: {
+          user: {
+            id: authenticatedRequest.user.userId,
+            email: authenticatedRequest.user.email,
+          },
+        },
       });
     } catch (error) {
       next(error);
