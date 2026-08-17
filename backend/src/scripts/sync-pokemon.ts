@@ -5,7 +5,7 @@ import { logger } from "../utils/logger.js";
 
 const syncService = new PokemonSyncService();
 
-const pokemonIds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 25];
+const pokemonIds = Array.from( { length: 151 },( _, index) => index + 1 );
 
 async function main() {
   try {
