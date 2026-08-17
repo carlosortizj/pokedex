@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface PokemonSearchProps {
   value: string;
@@ -10,8 +10,14 @@ export function PokemonSearch({
   onChange,
 }: PokemonSearchProps) {
   const [inputValue, setInputValue] = useState(value);
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
     const timeout = window.setTimeout(() => {
       onChange(inputValue.trim());
     }, 400);
