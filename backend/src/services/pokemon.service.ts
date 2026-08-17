@@ -28,7 +28,19 @@ interface FindPokemonParams {
 }
 
 interface PokemonListResponse {
-  data: PokemonResponse[];
+  data: Array<{
+    id: number;
+    name: string;
+    height: number | null;
+    weight: number | null;
+    baseExperience: number | null;
+    imageUrl: string | null;
+    types: string[];
+    abilities: Array<{
+      name: string;
+      isHidden: boolean;
+    }>;
+  }>;
   pagination: {
     page: number;
     limit: number;
