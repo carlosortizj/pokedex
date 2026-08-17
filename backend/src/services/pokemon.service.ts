@@ -59,10 +59,39 @@ interface PokemonListResponse {
   };
 }
 
+interface PokemonRepositoryPort {
+  findMany(
+    params: FindPokemonParams,
+  ): ReturnType<PokemonRepository["findMany"]>;
+
+  findByExternalId(
+    id: number,
+  ): ReturnType<PokemonRepository["findByExternalId"]>;
+
+  findPrevious(
+    externalId: number,
+  ): ReturnType<PokemonRepository["findPrevious"]>;
+
+  findNext(
+    externalId: number,
+  ): ReturnType<PokemonRepository["findNext"]>;
+}
+
+interface CacheServicePort {
+  get<T>(key: string): Promise<T | null>;
+  set<T>(
+    key: string,
+    value: T,
+    ttl?: number,
+  ): Promise<void>;
+}
+
 export class PokemonService {
   constructor(
-    private readonly pokemonRepository = new PokemonRepository(),
-    private readonly cacheService = new CacheService(),
+    private readonly pokemonRepository: PokemonRepositoryPort =
+      new PokemonRepository(),
+    private readonly cacheService: CacheServicePort =
+      new CacheService(),
   ) {}
 
   async findMany(

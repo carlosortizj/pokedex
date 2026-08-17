@@ -4,7 +4,9 @@ import { PokemonService } from "../src/services/pokemon.service.js";
 describe("PokemonService.findById", () => {
   it("returns a pokemon when it exists", async () => {
     const pokemonRepository = {
-        findByExternalId: vi.fn().mockResolvedValue({
+    findMany: vi.fn(),
+    
+    findByExternalId: vi.fn().mockResolvedValue({
         externalId: 25,
         name: "pikachu",
         height: 4,
@@ -12,39 +14,39 @@ describe("PokemonService.findById", () => {
         baseExperience: 112,
         imageUrl: "https://example.com/pikachu.png",
         types: [
-            {
+        {
             type: {
-                name: "electric",
+            name: "electric",
             },
-            },
+        },
         ],
         abilities: [
-            {
+        {
             ability: {
-                name: "static",
+            name: "static",
             },
             isHidden: false,
-            },
-            {
+        },
+        {
             ability: {
-                name: "lightning-rod",
+            name: "lightning-rod",
             },
             isHidden: true,
-            },
+        },
         ],
-        }),
+    }),
 
-        findPrevious: vi.fn().mockResolvedValue({
+    findPrevious: vi.fn().mockResolvedValue({
         externalId: 24,
         name: "charizard",
         imageUrl: "https://example.com/charizard.png",
-        }),
+    }),
 
-        findNext: vi.fn().mockResolvedValue({
+    findNext: vi.fn().mockResolvedValue({
         externalId: 26,
         name: "raichu",
         imageUrl: "https://example.com/raichu.png",
-        }),
+    }),
     };
 
     const cacheService = {
@@ -53,8 +55,8 @@ describe("PokemonService.findById", () => {
     };
 
     const service = new PokemonService(
-        pokemonRepository as any,
-        cacheService as any,
+        pokemonRepository,
+        cacheService,
     );
 
     const result = await service.findById(25);
