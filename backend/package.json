@@ -7,6 +7,7 @@
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
+    "test": "vitest run",
     "pokemon:sync": "tsx src/scripts/sync-pokemon.ts",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
