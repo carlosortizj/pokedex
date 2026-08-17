@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { PokemonService } from "../services/pokemon.service.js";
-import { pokemonQuerySchema } from "../schemas/pokemon.schema.js";
+import { pokemonQuerySchema, pokemonIdSchema } from "../schemas/pokemon.schema.js";
 import { AppError } from "../errors/app-error.js";
 
 export class PokemonController {
@@ -31,16 +31,8 @@ export class PokemonController {
     next: NextFunction,
   ) => {
     try {
-      const id = Number(req.params.id);
-
-      if (!Number.isInteger(id) || id <= 0) {
-        throw new AppError(
-          "INVALID_POKEMON_ID",
-          400,
-          "Pokemon id must be a positive integer.",
-        );
-      }
-
+      const { id } = pokemonIdSchema.parse(req.params);
+      
       const result =
         await this.pokemonService.findById(id);
 

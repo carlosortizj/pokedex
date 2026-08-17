@@ -33,7 +33,6 @@ model Pokemon {
   types          PokemonType[]
   abilities      PokemonAbility[]
 
-  @@index([name])
   @@map("pokemon")
 }
 

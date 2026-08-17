@@ -9,29 +9,29 @@ export function errorMiddleware(
   res: Response,
   _next: NextFunction,
 ) {
-    if (error instanceof ZodError) {
-    logger.warn(
-        {
-        issues: error.issues,
-        method: req.method,
-        url: req.originalUrl,
-        },
-        "Validation error",
-    );
+  if (error instanceof ZodError) {
+  logger.warn(
+      {
+      issues: error.issues,
+      method: req.method,
+      url: req.originalUrl,
+      },
+      "Validation error",
+  );
 
-    res.status(400).json({
-        error: {
-        code: "VALIDATION_ERROR",
-        message: "Invalid request data.",
-        details: error.issues.map((issue) => ({
-            field: issue.path.join("."),
-            message: issue.message,
-        })),
-        },
-    });
+  res.status(400).json({
+      error: {
+      code: "VALIDATION_ERROR",
+      message: "Invalid request data.",
+      details: error.issues.map((issue) => ({
+          field: issue.path.join("."),
+          message: issue.message,
+      })),
+      },
+  });
 
-    return;
-    }
+  return;
+  }
   if (error instanceof AppError) {
     logger.warn(
       {
