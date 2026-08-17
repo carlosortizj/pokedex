@@ -7,6 +7,10 @@ export interface Pokemon {
   imageUrl: string | null;
   types: string[];
   abilities: PokemonAbility[];
+  navigation: {
+    previous: PokemonNavigation | null;
+    next: PokemonNavigation | null;
+  };
 }
 
 export interface PokemonAbility {
@@ -24,4 +28,10 @@ export interface PokemonPagination {
 export interface PokemonListResponse {
   data: Pokemon[];
   pagination: PokemonPagination;
+}
+
+export interface PokemonNavigation {
+  id: number;
+  name: string;
+  imageUrl: string | null;
 }

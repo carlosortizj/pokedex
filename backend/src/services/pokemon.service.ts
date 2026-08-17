@@ -16,6 +16,16 @@ interface PokemonResponse {
     name: string;
     isHidden: boolean;
   }>;
+  navigation: {
+    previous: PokemonNavigation | null;
+    next: PokemonNavigation | null;
+  };
+}
+
+interface PokemonNavigation {
+  id: number;
+  name: string;
+  imageUrl: string | null;
 }
 
 interface FindPokemonParams {
@@ -154,6 +164,15 @@ export class PokemonService {
       );
     }
 
+    const [previous, next] = await Promise.all([
+      this.pokemonRepository.findPrevious(
+        pokemon.externalId,
+      ),
+      this.pokemonRepository.findNext(
+        pokemon.externalId,
+      ),
+    ]);
+
     const result: PokemonResponse = {
       id: pokemon.externalId,
       name: pokemon.name,
@@ -168,6 +187,24 @@ export class PokemonService {
         name: item.ability.name,
         isHidden: item.isHidden,
       })),
+
+      navigation: {
+        previous: previous
+          ? {
+              id: previous.externalId,
+              name: previous.name,
+              imageUrl: previous.imageUrl,
+            }
+          : null,
+
+        next: next
+          ? {
+              id: next.externalId,
+              name: next.name,
+              imageUrl: next.imageUrl,
+            }
+          : null,
+      },
     };
 
     await this.cacheService.set(

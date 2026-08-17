@@ -184,6 +184,45 @@ export function PokemonDetailPage() {
             ))}
           </div>
         </section>
+        <section className="pokemon-detail-navigation">
+          {pokemon.navigation.previous ? (
+            <Link
+              to={`/pokemon/${pokemon.navigation.previous.id}`}
+              className="pokemon-navigation-button"
+            >
+              <span>← Anterior</span>
+              <strong>
+                #{String(
+                  pokemon.navigation.previous.id,
+                ).padStart(3, "0")}{" "}
+                {pokemon.navigation.previous.name}
+              </strong>
+            </Link>
+          ) : (
+            <span className="pokemon-navigation-button disabled">
+              ← Anterior
+            </span>
+          )}
+
+          {pokemon.navigation.next ? (
+            <Link
+              to={`/pokemon/${pokemon.navigation.next.id}`}
+              className="pokemon-navigation-button"
+            >
+              <span>Siguiente →</span>
+              <strong>
+                #{String(
+                  pokemon.navigation.next.id,
+                ).padStart(3, "0")}{" "}
+                {pokemon.navigation.next.name}
+              </strong>
+            </Link>
+          ) : (
+            <span className="pokemon-navigation-button disabled">
+              Siguiente →
+            </span>
+          )}
+        </section>
       </div>
     </main>
   );

@@ -163,4 +163,40 @@ export class PokemonRepository {
       },
     });
   }
+
+  async findPrevious(externalId: number) {
+    return prisma.pokemon.findFirst({
+      where: {
+        externalId: {
+          lt: externalId,
+        },
+      },
+      orderBy: {
+        externalId: "desc",
+      },
+      select: {
+        externalId: true,
+        name: true,
+        imageUrl: true,
+      },
+    });
+  }
+
+  async findNext(externalId: number) {
+    return prisma.pokemon.findFirst({
+      where: {
+        externalId: {
+          gt: externalId,
+        },
+      },
+      orderBy: {
+        externalId: "asc",
+      },
+      select: {
+        externalId: true,
+        name: true,
+        imageUrl: true,
+      },
+    });
+  }
 }

@@ -463,3 +463,33 @@ button {
     grid-template-columns: 1fr;
   }
 }
+
+.pokemon-detail-navigation {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.pokemon-navigation-button {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 180px;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pokemon-navigation-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.pokemon-navigation-button.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
