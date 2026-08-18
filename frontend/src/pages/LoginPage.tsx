@@ -3,6 +3,7 @@ import type { SubmitEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../services/auth.service";
 import { useAuth } from "../auth/useAuth";
+import { Navigate } from "react-router-dom";
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ export function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { setAuthenticated } = useAuth();
+  const { setAuthenticated, isAuthenticated } = useAuth();
 
     async function handleSubmit(
         event: SubmitEvent<HTMLFormElement>,
@@ -35,7 +36,9 @@ export function LoginPage() {
                 setLoading(false);
             }
         }
-
+    if (isAuthenticated) {
+        return <Navigate to="/" replace />;
+    }    
   return (
     <main className="login-page">
       <section className="login-card">
