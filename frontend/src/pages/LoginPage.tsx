@@ -39,60 +39,81 @@ export function LoginPage() {
     if (isAuthenticated) {
         return <Navigate to="/" replace />;
     }    
-  return (
-    <main className="login-page">
-      <section className="login-card">
-        <span className="pokemon-eyebrow">
-          POKÉDEX ACCESS
-        </span>
+    return (
+        <main className="login-page">
+            <section className="login-card">
+            <div className="login-brand">
+                <span className="login-indicator" />
+                <span className="login-eyebrow">
+                POKÉDEX ACCESS
+                </span>
+            </div>
 
-        <h1>Iniciar sesión</h1>
+            <div className="login-heading">
+                <h1>Iniciar sesión</h1>
+                <p>
+                Accede para explorar la Pokédex.
+                </p>
+            </div>
 
-        <p>
-          Ingresa tus credenciales para acceder a la Pokédex.
-        </p>
+            <form
+                className="login-form"
+                onSubmit={handleSubmit}
+            >
+                <label className="login-field">
+                <span>Correo electrónico</span>
 
-        <form onSubmit={handleSubmit}>
-          <label>
-            Correo electrónico
-            <input
-              type="email"
-              value={email}
-              onChange={(event) =>
-                setEmail(event.target.value)
-              }
-              required
-            />
-          </label>
+                <input
+                    type="email"
+                    value={email}
+                    onChange={(event) =>
+                    setEmail(event.target.value)
+                    }
+                    placeholder="correo@ejemplo.com"
+                    autoComplete="email"
+                    required
+                />
+                </label>
 
-          <label>
-            Contraseña
-            <input
-              type="password"
-              value={password}
-              onChange={(event) =>
-                setPassword(event.target.value)
-              }
-              required
-            />
-          </label>
+                <label className="login-field">
+                <span>Contraseña</span>
 
-          {error && (
-            <p className="login-error">
-              {error}
+                <input
+                    type="password"
+                    value={password}
+                    onChange={(event) =>
+                    setPassword(event.target.value)
+                    }
+                    placeholder="••••••••"
+                    autoComplete="current-password"
+                    required
+                />
+                </label>
+
+                {error && (
+                <div
+                    className="login-error"
+                    role="alert"
+                >
+                    {error}
+                </div>
+                )}
+
+                <button
+                className="login-submit"
+                type="submit"
+                disabled={loading}
+                >
+                {loading
+                    ? "Ingresando..."
+                    : "Ingresar"}
+                </button>
+            </form>
+
+            <p className="login-footer">
+                Datos sincronizados desde PokéAPI
             </p>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-          >
-            {loading
-              ? "Ingresando..."
-              : "Ingresar"}
-          </button>
-        </form>
-      </section>
-    </main>
-  );
+            </section>
+        </main>
+    );
 }

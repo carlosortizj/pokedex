@@ -793,3 +793,309 @@ button {
     padding-top: 48px;
   }
 }
+
+/* =========================
+   Login
+========================= */
+
+.login-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px 16px;
+
+  background:
+    radial-gradient(
+      circle at top,
+      rgba(227, 53, 13, 0.16),
+      transparent 38%
+    ),
+    #f5f5f7;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 28px 22px;
+
+  background: #ffffff;
+
+  border: 1px solid var(--border);
+  border-radius: 22px;
+
+  box-shadow: var(--shadow-lg);
+}
+
+.login-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-bottom: 28px;
+}
+
+.login-indicator {
+  width: 18px;
+  height: 18px;
+
+  border: 4px solid #ffffff;
+  border-radius: 50%;
+
+  background: #35c7f0;
+
+  box-shadow:
+    0 0 0 2px var(--pokedex-dark-red),
+    0 0 12px rgba(53, 199, 240, 0.45);
+}
+
+.login-eyebrow {
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+
+  color: var(--pokedex-red);
+}
+
+.login-heading {
+  margin-bottom: 28px;
+}
+
+.login-heading h1 {
+  margin: 0 0 8px;
+
+  font-size: clamp(1.8rem, 7vw, 2.35rem);
+  line-height: 1.1;
+
+  color: var(--text);
+}
+
+.login-heading p {
+  margin: 0;
+
+  color: var(--text-muted);
+
+  line-height: 1.55;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+
+  gap: 18px;
+}
+
+.login-field {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+.login-field span {
+  font-size: 0.88rem;
+  font-weight: 700;
+
+  color: var(--text);
+}
+
+.login-field input {
+  width: 100%;
+  min-height: 48px;
+
+  padding: 0 14px;
+
+  border: 1px solid var(--border);
+  border-radius: 12px;
+
+  background: #ffffff;
+  color: var(--text);
+
+  font: inherit;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.login-field input::placeholder {
+  color: #9ca3af;
+}
+
+.login-field input:focus {
+  border-color: var(--pokedex-red);
+
+  box-shadow:
+    0 0 0 3px rgba(227, 53, 13, 0.12);
+}
+
+.login-error {
+  padding: 12px 14px;
+
+  border: 1px solid rgba(227, 53, 13, 0.28);
+  border-radius: 10px;
+
+  background: rgba(227, 53, 13, 0.07);
+
+  color: var(--pokedex-dark-red);
+
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.login-submit {
+  min-height: 50px;
+
+  border: 0;
+  border-radius: 12px;
+
+  background: linear-gradient(
+    135deg,
+    #e3350d,
+    #b92708
+  );
+
+  color: #ffffff;
+
+  font: inherit;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 8px 20px rgba(227, 53, 13, 0.22);
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.login-submit:hover:not(:disabled) {
+  background: linear-gradient(
+    135deg,
+    #c92f0b,
+    #9f2107
+  );
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 12px 24px rgba(227, 53, 13, 0.28);
+}
+
+.login-submit:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.login-submit:disabled {
+  background: #d96a52;
+
+  color: #ffffff;
+
+  opacity: 0.7;
+
+  cursor: not-allowed;
+}
+
+.login-submit:focus-visible {
+  outline: 3px solid rgba(227, 53, 13, 0.2);
+  outline-offset: 3px;
+}
+
+.login-footer {
+  margin: 24px 0 0;
+  padding-top: 20px;
+
+  border-top: 1px solid var(--border);
+
+  text-align: center;
+
+  font-size: 0.76rem;
+
+  color: var(--text-muted);
+}
+
+@media (min-width: 600px) {
+  .login-card {
+    padding: 36px;
+  }
+}
+
+
+/* =========================
+   Header / Logout
+========================= */
+
+.pokemon-header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 20px;
+}
+
+.logout-button {
+  flex-shrink: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 42px;
+  padding: 0 16px;
+
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.logout-button:hover {
+  background: #ffffff;
+  color: #e3350d;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.logout-button:active {
+  transform: translateY(0);
+}
+
+.logout-button:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.35);
+  outline-offset: 3px;
+}
+
+@media (max-width: 599px) {
+  .pokemon-header-top {
+    gap: 12px;
+  }
+
+  .logout-button {
+    min-height: 38px;
+    padding: 0 10px;
+
+    font-size: 0.78rem;
+
+    white-space: nowrap;
+  }
+}
