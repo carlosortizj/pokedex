@@ -3,24 +3,108 @@ services:
     image: mysql:8.4
     container_name: pokedex-mysql
     restart: unless-stopped
+
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: pokedex
-      MYSQL_USER: pokedex
-      MYSQL_PASSWORD: pokedex
+
     ports:
       - "3306:3306"
+
     volumes:
       - mysql_data:/var/lib/mysql
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-proot"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
 
   redis:
     image: redis:7-alpine
     container_name: pokedex-redis
     restart: unless-stopped
+
     ports:
       - "6379:6379"
+
     volumes:
       - redis_data:/data
+
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+
+    container_name: pokedex-backend
+    restart: unless-stopped
+
+    environment:
+      PORT: 3000
+
+      DATABASE_URL: mysql://root:root@mysql:3306/pokedex?allowPublicKeyRetrieval=true
+      REDIS_URL: redis://redis:6379
+
+      POKEAPI_URL: https://pokeapi.co/api/v2
+      LOG_LEVEL: info
+
+      JWT_ACCESS_SECRET: docker-development-access-secret
+      JWT_REFRESH_SECRET: docker-development-refresh-secret
+
+      JWT_ACCESS_EXPIRES_IN: 15m
+      JWT_REFRESH_EXPIRES_IN: 7d
+
+    ports:
+      - "3000:3000"
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+      redis:
+        condition: service_healthy
+
+    command: >
+      sh -c "
+      npx prisma generate &&
+      npx prisma migrate deploy &&
+      npm run dev
+      "
+
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+
+    container_name: pokedex-frontend
+    restart: unless-stopped
+
+    environment:
+      VITE_API_URL: http://localhost:3000/api
+
+    ports:
+      - "5173:5173"
+
+    depends_on:
+      - backend
+
 
 volumes:
   mysql_data:
