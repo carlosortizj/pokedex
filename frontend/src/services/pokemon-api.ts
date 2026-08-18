@@ -1,12 +1,11 @@
 import type { Pokemon } from "../types/pokemon";
-
-const API_URL = import.meta.env.VITE_API_URL;
+import { apiFetch } from "./api-client";
 
 export async function getPokemonById(
   id: number,
 ): Promise<Pokemon> {
-  const response = await fetch(
-    `${API_URL}/pokemon/${id}`,
+  const response = await apiFetch(
+    `/pokemon/${id}`,
   );
 
   if (!response.ok) {

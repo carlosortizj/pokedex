@@ -1,6 +1,5 @@
 import type { Pokemon, PokemonListResponse } from "../types/pokemon";
-
-const API_URL = import.meta.env.VITE_API_URL;
+import { apiFetch } from "./api-client";
 
 interface PokemonQueryParams {
   page?: number;
@@ -40,8 +39,8 @@ export async function getPokemon(
     searchParams.set("order", params.order);
   }
 
-  const response = await fetch(
-    `${API_URL}/pokemon?${searchParams.toString()}`,
+  const response = await apiFetch(
+    `/pokemon?${searchParams.toString()}`,
   );
 
   if (!response.ok) {
@@ -56,8 +55,8 @@ export async function getPokemon(
 export async function getPokemonById(
   id: number,
 ): Promise<Pokemon> {
-  const response = await fetch(
-    `${API_URL}/pokemon/${id}`,
+  const response = await apiFetch(
+    `/pokemon/${id}`,
   );
 
   if (!response.ok) {

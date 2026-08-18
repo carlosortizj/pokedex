@@ -2,6 +2,8 @@ import { useCallback, useState } from "react";
 import { PokemonList } from "../components/PokemonList";
 import { PokemonSearch } from "../components/PokemonSearch";
 import { PokemonFilters } from "../components/PokemonFilters";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../auth/useAuth";
 
 export function PokemonPage() {
   const [search, setSearch] = useState("");
@@ -22,6 +24,14 @@ export function PokemonPage() {
     },
     [],
   );
+
+const navigate = useNavigate();
+const { logout } = useAuth();
+
+async function handleLogout() {
+  await logout();
+  navigate("/login");
+}
 
   return (
     <div className="pokemon-page">
@@ -56,6 +66,13 @@ export function PokemonPage() {
           page={page}
           onPageChange={setPage}
         />
+
+        <button
+          type="button"
+          onClick={handleLogout}
+        >
+          Cerrar sesión
+      </button>
       </main>
     </div>
   );
