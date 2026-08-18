@@ -10,39 +10,43 @@ async function refreshAccessToken(): Promise<string | null> {
   const refreshToken =
     localStorage.getItem("refreshToken");
 
-  if (!refreshToken) {
-    return null;
-  }
+    if (!refreshToken) {
+        return null;
+    }
 
-  const response = await fetch(
-    `${API_URL}/auth/refresh`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        refreshToken,
-      }),
-    },
-  );
+    const response = await fetch(
+        `${API_URL}/auth/refresh`,
+        {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            refreshToken,
+        }),
+        },
+    );
 
-  if (!response.ok) {
+    if (!response.ok) {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
 
+    window.dispatchEvent(
+        new Event("auth:session-expired"),
+    );
+
     return null;
-  }
+    }
 
-  const result: RefreshResponse =
-    await response.json();
+    const result: RefreshResponse =
+        await response.json();
 
-  localStorage.setItem(
-    "accessToken",
-    result.data.accessToken,
-  );
+    localStorage.setItem(
+        "accessToken",
+        result.data.accessToken,
+    );
 
-  return result.data.accessToken;
+    return result.data.accessToken;
 }
 
 export async function apiFetch(

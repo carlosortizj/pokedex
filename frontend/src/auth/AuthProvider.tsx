@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
 import { logoutRequest } from "../services/auth.service";
 
@@ -13,6 +13,23 @@ export function AuthProvider({
         localStorage.getItem("accessToken"),
       );
     });
+    useEffect(() => {
+    function handleSessionExpired() {
+        setIsAuthenticated(false);
+    }
+
+    window.addEventListener(
+        "auth:session-expired",
+        handleSessionExpired,
+    );
+
+    return () => {
+        window.removeEventListener(
+        "auth:session-expired",
+        handleSessionExpired,
+        );
+    };
+    }, []);
 
   async function logout() {
     const refreshToken =
