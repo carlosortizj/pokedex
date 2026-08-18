@@ -3,6 +3,7 @@ import { PokemonPage } from "./pages/PokemonPage";
 import { PokemonDetailPage } from "./pages/PokemonDetailPage";
 import { LoginPage } from "./pages/LoginPage";
 import { ProtectedRoute } from "./auth/ProtectedRoute";
+import { RegisterPage } from "./pages/RegisterPage";
 
 function App() {
   return (
@@ -29,6 +30,11 @@ function App() {
               <PokemonDetailPage />
             </ProtectedRoute>
           }
+        />
+
+        <Route
+          path="/register"
+          element={<RegisterPage />}
         />
       </Routes>
     </BrowserRouter>

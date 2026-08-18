@@ -1,9 +1,8 @@
 import { useState } from "react";
 import type { SubmitEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { login } from "../services/auth.service";
 import { useAuth } from "../auth/useAuth";
-import { Navigate } from "react-router-dom";
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -109,6 +108,13 @@ export function LoginPage() {
                     : "Ingresar"}
                 </button>
             </form>
+
+            <p className="login-footer">
+            ¿No tienes una cuenta?{" "}
+            <Link to="/register">
+                Regístrate
+            </Link>
+            </p>
 
             <p className="login-footer">
                 Datos sincronizados desde PokéAPI
