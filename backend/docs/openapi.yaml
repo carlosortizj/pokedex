@@ -1,0 +1,345 @@
+openapi: 3.0.3
+
+info:
+  title: Pokédex API
+  version: 1.0.0
+  description: >
+    API REST para autenticación de usuarios y consulta de Pokémon
+    persistidos desde PokéAPI.
+
+servers:
+  - url: http://localhost:3000
+    description: Servidor local
+
+tags:
+  - name: Auth
+    description: Autenticación y manejo de sesión
+  - name: Pokémon
+    description: Consulta de Pokémon
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+          format: email
+
+    PokemonAbility:
+      type: object
+      properties:
+        name:
+          type: string
+        isHidden:
+          type: boolean
+
+    PokemonNavigation:
+      type: object
+      nullable: true
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        imageUrl:
+          type: string
+          nullable: true
+
+    Pokemon:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 25
+        name:
+          type: string
+          example: pikachu
+        height:
+          type: integer
+          nullable: true
+        weight:
+          type: integer
+          nullable: true
+        baseExperience:
+          type: integer
+          nullable: true
+        imageUrl:
+          type: string
+          nullable: true
+        types:
+          type: array
+          items:
+            type: string
+        abilities:
+          type: array
+          items:
+            $ref: "#/components/schemas/PokemonAbility"
+        navigation:
+          type: object
+          properties:
+            previous:
+              $ref: "#/components/schemas/PokemonNavigation"
+            next:
+              $ref: "#/components/schemas/PokemonNavigation"
+
+paths:
+  /api/auth/register:
+    post:
+      tags:
+        - Auth
+      summary: Registrar usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  minLength: 8
+                  example: Password123
+      responses:
+        "201":
+          description: Usuario registrado correctamente
+        "400":
+          description: Datos inválidos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: El usuario ya existe
+
+  /api/auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Iniciar sesión
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Login correcto
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        $ref: "#/components/schemas/User"
+                      accessToken:
+                        type: string
+                      refreshToken:
+                        type: string
+        "401":
+          description: Credenciales inválidas
+
+  /api/auth/refresh:
+    post:
+      tags:
+        - Auth
+      summary: Renovar access token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - refreshToken
+              properties:
+                refreshToken:
+                  type: string
+      responses:
+        "200":
+          description: Access token renovado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      accessToken:
+                        type: string
+        "401":
+          description: Refresh token inválido o expirado
+
+  /api/auth/logout:
+    post:
+      tags:
+        - Auth
+      summary: Cerrar sesión
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - refreshToken
+              properties:
+                refreshToken:
+                  type: string
+      responses:
+        "200":
+          description: Sesión cerrada correctamente
+        "401":
+          description: Refresh token inválido
+
+  /api/pokemon:
+    get:
+      tags:
+        - Pokémon
+      summary: Listar Pokémon
+      description: Obtiene Pokémon paginados con búsqueda, filtros y ordenamiento.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Búsqueda por nombre
+
+        - in: query
+          name: type
+          schema:
+            type: string
+          description: Filtrar por tipo
+
+        - in: query
+          name: sort
+          schema:
+            type: string
+            enum:
+              - name
+              - externalId
+            default: externalId
+
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: asc
+
+      responses:
+        "200":
+          description: Lista de Pokémon obtenida correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Pokemon"
+                  pagination:
+                    type: object
+                    properties:
+                      page:
+                        type: integer
+                      limit:
+                        type: integer
+                      total:
+                        type: integer
+                      totalPages:
+                        type: integer
+
+        "401":
+          description: Token JWT ausente o inválido
+
+  /api/pokemon/{id}:
+    get:
+      tags:
+        - Pokémon
+      summary: Consultar detalle de un Pokémon
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        "200":
+          description: Pokémon encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Pokemon"
+
+        "401":
+          description: Token JWT ausente o inválido
+
+        "404":
+          description: Pokémon no encontrado

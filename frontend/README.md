@@ -60,6 +60,14 @@ El frontend permite registrarse, iniciar y cerrar sesión, buscar y filtrar Pok�
 
 ---
 
+## Documentación de la API
+
+La especificación OpenAPI se encuentra en:
+
+```text
+backend/docs/openapi.yaml
+```
+
 ## Arquitectura
 
 El backend separa las responsabilidades principales en capas:
