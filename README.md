@@ -4,6 +4,14 @@ Aplicación Full Stack desarrollada con **React, TypeScript, Node.js, Express, P
 
 El frontend permite registrarse, iniciar y cerrar sesión, buscar y filtrar Pokémon, navegar entre páginas y consultar el detalle de cada Pokémon en una interfaz responsive inspirada en una Pokédex.
 
+## Despliegue
+
+Frontend:
+https://pokedex-sepia-iota.vercel.app/
+
+Backend:
+https://pokedex-production-9c02.up.railway.app/
+
 ## Características
 
 - Sincronización de los primeros **151 Pokémon** desde PokéAPI.
